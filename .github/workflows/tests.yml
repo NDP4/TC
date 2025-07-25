@@ -77,7 +77,7 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: testing
           APP_ENV: testing
-        run: php artisan migrate --force
+        run: php artisan migrate:fresh --force
 
       - name: Run Tests
         env:
@@ -88,4 +88,4 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: testing
           APP_ENV: testing
-        run: php artisan test --parallel
+        run: php artisan test
