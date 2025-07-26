@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -27,13 +24,13 @@ class AuthController extends Controller
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => 'Invalid credentials'
                 ], 401);
             }
         } catch (JWTException $e) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Could not create token'
             ], 500);
         }
@@ -41,21 +38,21 @@ class AuthController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Login successful',
-            'data' => [
+            'data'    => [
                 'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone_number' => $user->phone_number,
-                    'avatar' => $user->avatar,
-                    'skill_level' => $user->skillLevel?->level_name,
+                    'id'               => $user->id,
+                    'name'             => $user->name,
+                    'email'            => $user->email,
+                    'phone_number'     => $user->phone_number,
+                    'avatar'           => $user->avatar,
+                    'skill_level'      => $user->skillLevel?->level_name,
                     'reputation_score' => $user->reputation_score,
-                    'is_active' => $user->is_active,
-                    'created_at' => $user->created_at
+                    'is_active'        => $user->is_active,
+                    'created_at'       => $user->created_at
                 ],
-                'token' => $token,
+                'token'      => $token,
                 'token_type' => 'bearer',
                 'expires_in' => JWTAuth::factory()->getTTL() * 60
             ]
@@ -68,34 +65,34 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone_number' => $request->phone_number,
-            'skill_level_id' => $request->skill_level_id,
+            'name'             => $request->name,
+            'email'            => $request->email,
+            'password'         => Hash::make($request->password),
+            'phone_number'     => $request->phone_number,
+            'skill_level_id'   => $request->skill_level_id,
             'reputation_score' => 0.00,
-            'is_active' => true,
+            'is_active'        => true,
         ]);
 
         // Generate token for the new user
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'User registered successfully',
-            'data' => [
+            'data'    => [
                 'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone_number' => $user->phone_number,
-                    'avatar' => $user->avatar,
-                    'skill_level' => $user->skillLevel?->level_name,
+                    'id'               => $user->id,
+                    'name'             => $user->name,
+                    'email'            => $user->email,
+                    'phone_number'     => $user->phone_number,
+                    'avatar'           => $user->avatar,
+                    'skill_level'      => $user->skillLevel?->level_name,
                     'reputation_score' => $user->reputation_score,
-                    'is_active' => $user->is_active,
-                    'created_at' => $user->created_at
+                    'is_active'        => $user->is_active,
+                    'created_at'       => $user->created_at
                 ],
-                'token' => $token,
+                'token'      => $token,
                 'token_type' => 'bearer',
                 'expires_in' => JWTAuth::factory()->getTTL() * 60
             ]
@@ -111,12 +108,12 @@ class AuthController extends Controller
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Successfully logged out'
             ]);
         } catch (JWTException $e) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Failed to logout, please try again'
             ], 500);
         }
@@ -132,15 +129,15 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'data' => [
-                    'token' => $token,
+                'data'   => [
+                    'token'      => $token,
                     'token_type' => 'bearer',
                     'expires_in' => JWTAuth::factory()->getTTL() * 60
                 ]
             ]);
         } catch (JWTException $e) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Token could not be refreshed'
             ], 401);
         }
@@ -155,16 +152,16 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-                'avatar' => $user->avatar,
-                'skill_level' => $user->skillLevel?->level_name,
+            'data'   => [
+                'id'               => $user->id,
+                'name'             => $user->name,
+                'email'            => $user->email,
+                'phone_number'     => $user->phone_number,
+                'avatar'           => $user->avatar,
+                'skill_level'      => $user->skillLevel?->level_name,
                 'reputation_score' => $user->reputation_score,
-                'is_active' => $user->is_active,
-                'created_at' => $user->created_at
+                'is_active'        => $user->is_active,
+                'created_at'       => $user->created_at
             ]
         ]);
     }

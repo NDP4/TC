@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class RegisterRequest extends FormRequest
 {
@@ -24,10 +24,10 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'phone_number' => 'nullable|string|max:20',
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|string|email|max:255|unique:users',
+            'password'       => 'required|string|min:6|confirmed',
+            'phone_number'   => 'nullable|string|max:20',
             'skill_level_id' => 'nullable|exists:skill_levels,id',
         ];
     }
@@ -38,13 +38,13 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
-            'email.email' => 'Email must be a valid email address',
-            'email.unique' => 'Email already exists',
-            'password.required' => 'Password is required',
-            'password.min' => 'Password must be at least 6 characters',
-            'password.confirmed' => 'Password confirmation does not match',
+            'name.required'         => 'Name is required',
+            'email.required'        => 'Email is required',
+            'email.email'           => 'Email must be a valid email address',
+            'email.unique'          => 'Email already exists',
+            'password.required'     => 'Password is required',
+            'password.min'          => 'Password must be at least 6 characters',
+            'password.confirmed'    => 'Password confirmation does not match',
             'skill_level_id.exists' => 'Selected skill level does not exist',
         ];
     }
@@ -56,9 +56,9 @@ class RegisterRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors()
             ], 422)
         );
     }

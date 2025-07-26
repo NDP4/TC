@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,20 +24,20 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'User not found'
             ], 404);
         }
 
         return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone_number' => $user->phone_number,
-            'skill_level' => $user->skillLevel?->level_name,
+            'id'               => $user->id,
+            'name'             => $user->name,
+            'email'            => $user->email,
+            'phone_number'     => $user->phone_number,
+            'skill_level'      => $user->skillLevel?->level_name,
             'reputation_score' => $user->reputation_score,
-            'is_active' => $user->is_active,
-            'created_at' => $user->created_at
+            'is_active'        => $user->is_active,
+            'created_at'       => $user->created_at
         ]);
     }
 
@@ -50,7 +50,7 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'User not found'
             ], 404);
         }
@@ -59,7 +59,7 @@ class UserController extends Controller
         $authUser = JWTAuth::parseToken()->authenticate();
         if ($authUser->id !== (int) $id) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Unauthorized to update this profile'
             ], 403);
         }
@@ -73,7 +73,7 @@ class UserController extends Controller
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $avatarPath           = $request->file('avatar')->store('avatars', 'public');
             $updateData['avatar'] = $avatarPath;
         }
 
@@ -86,18 +86,18 @@ class UserController extends Controller
         $user->load('skillLevel');
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Profile updated successfully',
-            'data' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-                'avatar' => $user->avatar ? Storage::url($user->avatar) : null,
-                'skill_level' => $user->skillLevel?->level_name,
+            'data'    => [
+                'id'               => $user->id,
+                'name'             => $user->name,
+                'email'            => $user->email,
+                'phone_number'     => $user->phone_number,
+                'avatar'           => $user->avatar ? Storage::url($user->avatar) : null,
+                'skill_level'      => $user->skillLevel?->level_name,
                 'reputation_score' => $user->reputation_score,
-                'is_active' => $user->is_active,
-                'created_at' => $user->created_at
+                'is_active'        => $user->is_active,
+                'created_at'       => $user->created_at
             ]
         ]);
     }
@@ -108,18 +108,18 @@ class UserController extends Controller
     public function index(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'page' => 'sometimes|integer|min:1',
-            'limit' => 'sometimes|integer|min:1|max:100',
-            'search' => 'sometimes|string|max:255',
+            'page'           => 'sometimes|integer|min:1',
+            'limit'          => 'sometimes|integer|min:1|max:100',
+            'search'         => 'sometimes|string|max:255',
             'skill_level_id' => 'sometimes|exists:skill_levels,id',
-            'is_active' => 'sometimes|boolean',
+            'is_active'      => 'sometimes|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors()
             ], 422);
         }
 
@@ -146,15 +146,15 @@ class UserController extends Controller
         $users = $query->paginate($limit);
 
         return response()->json([
-            'status' => 'success',
-            'data' => $users->items(),
+            'status'     => 'success',
+            'data'       => $users->items(),
             'pagination' => [
                 'current_page' => $users->currentPage(),
-                'last_page' => $users->lastPage(),
-                'per_page' => $users->perPage(),
-                'total' => $users->total(),
-                'from' => $users->firstItem(),
-                'to' => $users->lastItem(),
+                'last_page'    => $users->lastPage(),
+                'per_page'     => $users->perPage(),
+                'total'        => $users->total(),
+                'from'         => $users->firstItem(),
+                'to'           => $users->lastItem(),
             ]
         ]);
     }
@@ -168,7 +168,7 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'User not found'
             ], 404);
         }
@@ -177,7 +177,7 @@ class UserController extends Controller
         $authUser = JWTAuth::parseToken()->authenticate();
         if ($authUser->id !== (int) $id) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Unauthorized to deactivate this account'
             ], 403);
         }
@@ -185,7 +185,7 @@ class UserController extends Controller
         $user->update(['is_active' => false]);
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Account deactivated successfully'
         ]);
     }
@@ -199,7 +199,7 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'User not found'
             ], 404);
         }
@@ -208,7 +208,7 @@ class UserController extends Controller
         $authUser = JWTAuth::parseToken()->authenticate();
         if ($authUser->id !== (int) $id) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Unauthorized to activate this account'
             ], 403);
         }
@@ -216,7 +216,7 @@ class UserController extends Controller
         $user->update(['is_active' => true]);
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Account activated successfully'
         ]);
     }
