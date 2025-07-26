@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +15,8 @@ return new class () extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->string('password_hash')->after('email')->nullable();
             $table->string('phone_number')->after('password_hash')->nullable();
-            $table->foreignId('skill_level_id')->nullable()->after('phone_number')->constrained('skill_levels');
+            $table->string('avatar')->nullable()->after('phone_number');
+            $table->foreignId('skill_level_id')->nullable()->after('avatar')->constrained('skill_levels');
             $table->decimal('reputation_score', 5, 2)->default(0.00)->after('skill_level_id');
             $table->boolean('is_active')->default(true)->after('reputation_score');
         });
@@ -38,6 +39,7 @@ return new class () extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'phone_number',
+                'avatar',
                 'skill_level_id',
                 'reputation_score',
                 'is_active'

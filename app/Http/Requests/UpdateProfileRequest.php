@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+
+class UpdateProfileRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => 'sometimes|string|max:255',
+            'phone_number' => 'sometimes|nullable|string|max:20',
+            'skill_level_id' => 'sometimes|nullable|exists:skill_levels,id',
+            'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'password' => 'sometimes|string|min:6|confirmed',
+        ];
+    }
+
+    /**
+     * Get custom error messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'name.string' => 'Name must be a string',
+            'name.max' => 'Name must not exceed 255 characters',
+            'phone_number.string' => 'Phone number must be a string',
+            'phone_number.max' => 'Phone number must not exceed 20 characters',
+            'skill_level_id.exists' => 'Selected skill level does not exist',
+            'avatar.image' => 'Avatar must be an image file',
+            'avatar.mimes' => 'Avatar must be jpeg, png, jpg, or gif format',
+            'avatar.max' => 'Avatar file size must not exceed 2MB',
+            'password.min' => 'Password must be at least 6 characters',
+            'password.confirmed' => 'Password confirmation does not match',
+        ];
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422)
+        );
+    }
+}
