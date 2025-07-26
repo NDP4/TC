@@ -26,8 +26,8 @@ Talent Connect adalah platform yang menghubungkan freelancer dengan klien untuk 
 1. Clone repository
 
 ```bash
-git clone <repository-url>
-cd be_tc
+git clone <https://github.com/NDP4/TC.git>
+cd TC
 ```
 
 2. Install dependencies
