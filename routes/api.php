@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/users/register', [AuthController::class, 'register']); // Alternative endpoint as per spec
 
     // Protected routes (require authentication)
-    Route::middleware(['auth:api'])->group(function () {
+    Route::middleware(['jwt.auth'])->group(function () {
         // Authentication management
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::post('/auth/refresh', [AuthController::class, 'refresh']);
