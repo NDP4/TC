@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,11 +38,11 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'hours_booked' => 'decimal:2',
+            'hours_booked'  => 'decimal:2',
             'coins_charged' => 'decimal:2',
-            'booked_at' => 'datetime',
-            'completed_at' => 'datetime',
-            'cancelled_at' => 'datetime',
+            'booked_at'     => 'datetime',
+            'completed_at'  => 'datetime',
+            'cancelled_at'  => 'datetime',
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +35,7 @@ class Verification extends Model
     {
         return [
             'submitted_at' => 'datetime',
-            'reviewed_at' => 'datetime',
+            'reviewed_at'  => 'datetime',
         ];
     }
 
