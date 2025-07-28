@@ -35,7 +35,7 @@ class AuthController extends Controller
             ], 500);
         }
 
-        $user = JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::user();
 
         return response()->json([
             'status'  => 'success',
