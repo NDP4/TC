@@ -63,9 +63,21 @@ class UserController extends Controller
         // Get all input data for debugging
         $allInput = $request->all();
         \Illuminate\Support\Facades\Log::debug('Update profile raw input:', $allInput);
+        \Illuminate\Support\Facades\Log::debug('Request method: ' . $request->method());
+        \Illuminate\Support\Facades\Log::debug('Content-Type: ' . $request->header('Content-Type'));
+        \Illuminate\Support\Facades\Log::debug('Has files: ' . ($request->hasFile('avatar') ? 'yes' : 'no'));
 
         $updateData = $request->validated();
         \Illuminate\Support\Facades\Log::debug('Update profile validated data:', $updateData);
+
+        // Check if we have any data to update
+        if (empty($updateData)) {
+            \Illuminate\Support\Facades\Log::warning('No data to update - updateData is empty');
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'No data provided for update'
+            ], 400);
+        }
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {

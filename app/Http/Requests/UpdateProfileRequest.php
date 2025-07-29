@@ -27,10 +27,48 @@ class UpdateProfileRequest extends FormRequest
             'name'           => 'sometimes|string|max:255',
             'phone_number'   => 'sometimes|nullable|string|max:20',
             'skill_level_id' => 'sometimes|nullable|exists:skill_levels,id',
-            'avatar'         => 'sometimes|nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar'         => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password'       => 'sometimes|nullable|string|min:6|confirmed',
         ];
     }
+
+    /**
+     * Handle method spoofing for multipart requests
+     */
+    protected function prepareForValidation(): void
+    {
+        // Laravel doesn't handle PUT with multipart/form-data well
+        // So we need to merge all input including files
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $input = $this->all();
+
+            // Handle files separately for PUT requests
+            if ($this->hasFile('avatar')) {
+                $input['avatar'] = $this->file('avatar');
+            }
+
+            // Handle password confirmation if exists
+            if ($this->has('password_confirmation')) {
+                $input['password_confirmation'] = $this->input('password_confirmation');
+            }
+
+            $this->merge($input);
+        }
+    }
+    // protected function prepareForValidation(): void
+    // {
+    //     // Hanya merge file jika ada file avatar
+    //     if (($this->isMethod('PUT') || $this->isMethod('PATCH')) && $this->hasFile('avatar')) {
+    //         $input = $this->all();
+    //         $input['avatar'] = $this->file('avatar');
+
+    //         if ($this->has('password_confirmation')) {
+    //             $input['password_confirmation'] = $this->input('password_confirmation');
+    //         }
+
+    //         $this->merge($input);
+    //     }
+    // }
 
     /**
      * Override to make sure non-validated fields are not removed

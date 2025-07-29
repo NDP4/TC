@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
         // User management
         Route::get('/users/{id}', [UserController::class, 'show']);
         Route::put('/users/{id}', [UserController::class, 'update']);
+        Route::post('/users/{id}/update', [UserController::class, 'update']); // Alternative for multipart forms
         Route::get('/users', [UserController::class, 'index']);
         Route::post('/users/{id}/deactivate', [UserController::class, 'deactivate']);
         Route::post('/users/{id}/activate', [UserController::class, 'activate']);

@@ -282,7 +282,8 @@ Authorization: Bearer {token}
 #### Update User Profile
 
 ```http
-PUT /users/{id}
+PUT /users/{id} // tanpa file upload
+POST /users/{id}/update // dengan file upload
 Authorization: Bearer {token}
 Content-Type: multipart/form-data
 ```
