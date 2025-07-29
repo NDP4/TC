@@ -147,6 +147,47 @@ Content-Type: application/json
 }
 ```
 
+#### Login with Google
+
+```http
+GET /auth/google/redirect
+```
+
+**Description:** Redirects user to Google OAuth authorization page.
+
+**Response:** Redirect to Google OAuth consent screen.
+
+```http
+GET /auth/google/callback
+```
+
+**Description:** Handles Google OAuth callback after user authorization.
+
+**Response (200):**
+
+```json
+{
+    "status": "success",
+    "message": "Login with Google successful",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@gmail.com",
+            "phone_number": null,
+            "avatar": "https://lh3.googleusercontent.com/a/...",
+            "skill_level": "Beginner",
+            "reputation_score": 0.0,
+            "is_active": true,
+            "created_at": "2025-01-15T10:30:00Z"
+        },
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+        "token_type": "bearer",
+        "expires_in": 3600
+    }
+}
+```
+
 #### Register User
 
 ```http
@@ -283,11 +324,11 @@ Authorization: Bearer {token}
 #### Update User Profile
 
 ```http
-PUT /users/{id} // tanpa file upload
-POST /users/{id}/update // dengan file upload
+PUT /users/{id}
+POST /users/{id}/update
 Authorization: Bearer {token}
-Content-Type: multipart/form-data // jika menggunakan file upload
-Content-Type: application/json // jika tidak menggunakan file upload
+Content-Type: multipart/form-data
+Content-Type: application/json
 ```
 
 **Request Body (Form Data):**
@@ -1026,6 +1067,11 @@ JWT_PROVIDERS_USER=Illuminate\Auth\EloquentUserProvider
 JWT_PROVIDERS_JWT=PHPOpenSourceSaver\JWTAuth\Providers\JWT\Lcobucci
 JWT_PROVIDERS_AUTH=PHPOpenSourceSaver\JWTAuth\Providers\Auth\Illuminate
 JWT_PROVIDERS_STORAGE=PHPOpenSourceSaver\JWTAuth\Providers\Storage\Illuminate
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your-google-client-id-here
+GOOGLE_CLIENT_SECRET=your-google-client-secret-here
+GOOGLE_REDIRECT_URI=http://localhost:8001/api/v1/auth/google/callback
 
 # Storage Configuration
 FILESYSTEM_DISK=local

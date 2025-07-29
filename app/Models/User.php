@@ -32,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'skill_level_id',
         'reputation_score',
         'is_active',
+        'google_id',
     ];
 
     /**
