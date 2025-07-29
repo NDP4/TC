@@ -48,7 +48,7 @@ class SocialAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
 
-            $beginner = \App\Models\SkillLevel::where('level_name', 'Beginner')->first();
+            $beginner     = \App\Models\SkillLevel::where('level_name', 'Beginner')->first();
             $skillLevelId = $beginner ? $beginner->id : null;
 
             $user = User::where('google_id', $googleUser->getId())->first();
@@ -93,7 +93,7 @@ class SocialAuthController extends Controller
                 'is_active'        => $user->is_active,
                 'created_at'       => $user->created_at,
             ];
-            $userJson = urlencode(json_encode($userData));
+            $userJson    = urlencode(json_encode($userData));
             $redirectUrl = "http://localhost:3000/auth/google/callback?token={$token}&user={$userJson}";
             return redirect($redirectUrl);
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {

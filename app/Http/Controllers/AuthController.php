@@ -65,7 +65,7 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         // Always set skill_level_id to Beginner for new registrations
-        $beginner = \App\Models\SkillLevel::where('level_name', 'Beginner')->first();
+        $beginner     = \App\Models\SkillLevel::where('level_name', 'Beginner')->first();
         $skillLevelId = $beginner ? $beginner->id : null;
 
         $user = User::create([

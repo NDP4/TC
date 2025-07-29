@@ -86,7 +86,7 @@ class UserController extends Controller
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $avatarPath           = $request->file('avatar')->store('avatars', 'public');
             $updateData['avatar'] = $avatarPath;
             \Illuminate\Support\Facades\Log::info('Avatar path set to: ' . $avatarPath);
         }
@@ -122,7 +122,6 @@ class UserController extends Controller
             ]
         ]);
     }
-
 
     /**
      * Get paginated list of users
