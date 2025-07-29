@@ -272,6 +272,7 @@ Authorization: Bearer {token}
     "name": "John Doe",
     "email": "john@example.com",
     "phone_number": "+628123456789",
+    "avatar": "http://localhost:8000/storage/avatars/avatar.jpg",
     "skill_level": "Advanced",
     "reputation_score": 4.8,
     "is_active": true,
@@ -285,7 +286,8 @@ Authorization: Bearer {token}
 PUT /users/{id} // tanpa file upload
 POST /users/{id}/update // dengan file upload
 Authorization: Bearer {token}
-Content-Type: multipart/form-data
+Content-Type: multipart/form-data // jika menggunakan file upload
+Content-Type: application/json // jika tidak menggunakan file upload
 ```
 
 **Request Body (Form Data):**

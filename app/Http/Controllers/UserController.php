@@ -34,6 +34,7 @@ class UserController extends Controller
             'name'             => $user->name,
             'email'            => $user->email,
             'phone_number'     => $user->phone_number,
+            'avatar'           => $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null,
             'skill_level'      => $user->skillLevel?->level_name,
             'reputation_score' => $user->reputation_score,
             'is_active'        => $user->is_active,
