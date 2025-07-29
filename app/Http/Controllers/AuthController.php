@@ -64,12 +64,16 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
+        // Always set skill_level_id to Beginner for new registrations
+        $beginner = \App\Models\SkillLevel::where('level_name', 'Beginner')->first();
+        $skillLevelId = $beginner ? $beginner->id : null;
+
         $user = User::create([
-            'name'             => $request->name,
-            'email'            => $request->email,
-            'password'         => Hash::make($request->password),
-            'phone_number'     => $request->phone_number,
-            'skill_level_id'   => $request->skill_level_id,
+            'name'             => $request->input('name'),
+            'email'            => $request->input('email'),
+            'password'         => Hash::make($request->input('password')),
+            'phone_number'     => $request->input('phone_number'),
+            'skill_level_id'   => $skillLevelId,
             'reputation_score' => 0.00,
             'is_active'        => true,
         ]);
@@ -87,7 +91,7 @@ class AuthController extends Controller
                     'email'            => $user->email,
                     'phone_number'     => $user->phone_number,
                     'avatar'           => $user->avatar,
-                    'skill_level'      => $user->skillLevel?->level_name,
+                    'skill_level'      => $user->skillLevel ? $user->skillLevel->level_name : null,
                     'reputation_score' => $user->reputation_score,
                     'is_active'        => $user->is_active,
                     'created_at'       => $user->created_at

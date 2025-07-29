@@ -41,9 +41,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update user profile
-     */
     public function update(UpdateProfileRequest $request, string $id): JsonResponse
     {
         $user = User::find($id);
@@ -55,7 +52,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        // Check if the authenticated user is updating their own profile
         $authUser = JWTAuth::parseToken()->authenticate();
         if ($authUser->id !== (int) $id) {
             return response()->json([
@@ -64,25 +60,37 @@ class UserController extends Controller
             ], 403);
         }
 
-        $updateData = $request->only(['name', 'phone_number', 'skill_level_id']);
+        // Get all input data for debugging
+        $allInput = $request->all();
+        \Illuminate\Support\Facades\Log::debug('Update profile raw input:', $allInput);
+
+        $updateData = $request->validated();
+        \Illuminate\Support\Facades\Log::debug('Update profile validated data:', $updateData);
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
+            \Illuminate\Support\Facades\Log::info('Processing avatar upload');
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-
-            $avatarPath           = $request->file('avatar')->store('avatars', 'public');
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $updateData['avatar'] = $avatarPath;
+            \Illuminate\Support\Facades\Log::info('Avatar path set to: ' . $avatarPath);
         }
 
         // Handle password update
-        if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($request->password);
+        if (!empty($updateData['password'])) {
+            \Illuminate\Support\Facades\Log::info('Processing password update');
+            $updateData['password'] = Hash::make($updateData['password']);
         }
 
-        $user->update($updateData);
+        // Update directly with the updateData array instead of fill method
+        $updated = $user->update($updateData);
+        \Illuminate\Support\Facades\Log::info('Update result: ' . ($updated ? 'success' : 'failure'));
+        \Illuminate\Support\Facades\Log::info('Updated data: ', $updateData);
+
+        // Refresh user data
+        $user->refresh();
         $user->load('skillLevel');
 
         return response()->json([
@@ -101,6 +109,7 @@ class UserController extends Controller
             ]
         ]);
     }
+
 
     /**
      * Get paginated list of users

@@ -27,9 +27,17 @@ class UpdateProfileRequest extends FormRequest
             'name'           => 'sometimes|string|max:255',
             'phone_number'   => 'sometimes|nullable|string|max:20',
             'skill_level_id' => 'sometimes|nullable|exists:skill_levels,id',
-            'avatar'         => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'password'       => 'sometimes|string|min:6|confirmed',
+            'avatar'         => 'sometimes|nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'password'       => 'sometimes|nullable|string|min:6|confirmed',
         ];
+    }
+
+    /**
+     * Override to make sure non-validated fields are not removed
+     */
+    protected function passedValidation()
+    {
+        \Illuminate\Support\Facades\Log::debug('Form data passed validation', $this->all());
     }
 
     /**
