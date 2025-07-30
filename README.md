@@ -418,6 +418,63 @@ Authorization: Bearer {token}
 }
 ```
 
+### 🔔 Notification Endpoints
+
+#### Get All Notifications for Authenticated User
+
+```http
+GET /notifications
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 1,
+            "message": "Your level up request has been approved!",
+            "read_status": false,
+            "created_at": "2025-01-15T10:30:00Z"
+        }
+        // ...more notifications
+    ]
+}
+```
+
+#### Mark Notification as Read
+
+```http
+POST /notifications/{id}/read
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "status": "success",
+    "message": "Notification marked as read",
+    "data": {
+        "id": 1,
+        "message": "Your level up request has been approved!",
+        "read_status": true,
+        "created_at": "2025-01-15T10:30:00Z"
+    }
+}
+```
+
+**Error (404):**
+
+```json
+{
+    "status": "error",
+    "message": "Notification not found"
+}
+```
+
 ### 📝 Request Validation Rules
 
 #### Login Request

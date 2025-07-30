@@ -36,6 +36,7 @@ class AuthController extends Controller
         }
 
         $user = JWTAuth::user();
+        $roles = $user->roles->pluck('name')->toArray();
 
         return response()->json([
             'status'  => 'success',
@@ -50,7 +51,8 @@ class AuthController extends Controller
                     'skill_level'      => $user->skillLevel?->level_name,
                     'reputation_score' => $user->reputation_score,
                     'is_active'        => $user->is_active,
-                    'created_at'       => $user->created_at
+                    'created_at'       => $user->created_at,
+                    'roles'            => $roles,
                 ],
                 'token'      => $token,
                 'token_type' => 'bearer',
@@ -153,6 +155,7 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         $user = JWTAuth::parseToken()->authenticate();
+        $roles = $user->roles->pluck('name')->toArray();
 
         return response()->json([
             'status' => 'success',
@@ -165,7 +168,8 @@ class AuthController extends Controller
                 'skill_level'      => $user->skillLevel?->level_name,
                 'reputation_score' => $user->reputation_score,
                 'is_active'        => $user->is_active,
-                'created_at'       => $user->created_at
+                'created_at'       => $user->created_at,
+                'roles'            => $roles,
             ]
         ]);
     }

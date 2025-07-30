@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             SkillLevelSeeder::class,
             CategorySeeder::class,
             LocationSeeder::class,
+            RoleSeeder::class,
         ]);
 
         // User::factory(10)->create();

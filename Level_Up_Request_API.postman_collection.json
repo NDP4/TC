@@ -1,0 +1,305 @@
+{
+    "info": {
+        "name": "TC - Level Up Request API",
+        "description": "API collection for Level Up Request feature - User skill level verification system",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000/api/v1",
+            "type": "string"
+        },
+        {
+            "key": "jwt_token",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "login"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Register",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"phone_number\": \"+628123456789\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "register"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Level Up Requests",
+            "item": [
+                {
+                    "name": "Submit Level Up Request",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "target_level",
+                                    "value": "Intermediate",
+                                    "type": "text",
+                                    "description": "Target skill level (Beginner/Intermediate/Advanced/Expert/Master)"
+                                },
+                                {
+                                    "key": "documents[ktp]",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "KTP document (Required) - jpeg/png/jpg/pdf, max 5MB"
+                                },
+                                {
+                                    "key": "documents[ijazah]",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "Ijazah document (Optional) - jpeg/png/jpg/pdf, max 5MB"
+                                },
+                                {
+                                    "key": "documents[sertifikat]",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "Sertifikat document (Optional) - jpeg/png/jpg/pdf, max 5MB"
+                                },
+                                {
+                                    "key": "documents[portofolio]",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "Portofolio document (Optional) - jpeg/png/jpg/pdf, max 10MB"
+                                },
+                                {
+                                    "key": "notes",
+                                    "value": "Saya ingin menjadi penyedia layanan profesional",
+                                    "type": "text",
+                                    "description": "Additional notes (Optional, max 1000 chars)"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/level-up-request",
+                            "host": ["{{base_url}}"],
+                            "path": ["level-up-request"]
+                        },
+                        "description": "Submit a new level up request with documents"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Level Up Request Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/level-up-request/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["level-up-request", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Level up request ID"
+                                }
+                            ]
+                        },
+                        "description": "Get details of a specific level up request (user can only view their own)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Level Up Requests (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/level-up-requests?status=pending&page=1&limit=10",
+                            "host": ["{{base_url}}"],
+                            "path": ["level-up-requests"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "Filter by status (pending/approved/rejected)"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Items per page (max 100)"
+                                }
+                            ]
+                        },
+                        "description": "Get paginated list of all level up requests for admin/verifier"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get My Level Up Requests",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/my-level-up-requests",
+                            "host": ["{{base_url}}"],
+                            "path": ["my-level-up-requests"]
+                        },
+                        "description": "Get current user's level up requests history"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Verify Level Up Request - Approve",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"approved\",\n    \"reason\": \"Dokumen valid dan sesuai persyaratan. Semua kriteria terpenuhi.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/level-up-request/:id/verify",
+                            "host": ["{{base_url}}"],
+                            "path": ["level-up-request", ":id", "verify"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Level up request ID to verify"
+                                }
+                            ]
+                        },
+                        "description": "Approve a level up request (admin/verifier only)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Verify Level Up Request - Reject",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"rejected\",\n    \"reason\": \"Dokumen tidak jelas atau tidak sesuai dengan persyaratan. Silakan upload ulang dengan kualitas yang lebih baik.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/level-up-request/:id/verify",
+                            "host": ["{{base_url}}"],
+                            "path": ["level-up-request", ":id", "verify"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Level up request ID to verify"
+                                }
+                            ]
+                        },
+                        "description": "Reject a level up request (admin/verifier only)"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Helper Endpoints",
+            "item": [
+                {
+                    "name": "Get User Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/auth/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "me"]
+                        },
+                        "description": "Get current user profile including skill level"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["users"]
+                        },
+                        "description": "Get all users with their skill levels"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

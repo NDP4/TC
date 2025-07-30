@@ -133,6 +133,30 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get the level up requests made by the user.
+     */
+    public function levelUpRequests(): HasMany
+    {
+        return $this->hasMany(LevelUpRequest::class);
+    }
+
+    /**
+     * Get the level up requests verified by the user.
+     */
+    public function verifiedLevelUpRequests(): HasMany
+    {
+        return $this->hasMany(LevelUpRequest::class, 'verified_by');
+    }
+
+    /**
+     * Get the roles assigned to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(\App\Models\Role::class, 'role_user');
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */
     public function getJWTIdentifier()
